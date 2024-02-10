@@ -11,6 +11,7 @@ import {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  signoutSuccess,
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 import {
@@ -147,6 +148,21 @@ export default function DashProfile() {
       dispatch(deleteUserFailure(error.message));
     }
   };
+  const handelSignout = async () => {
+    try {
+      const res = await fetch("/api/user/signout", {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(signoutSuccess());
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <div className="max-w-lg max-auto  p-5 w-full">
       <h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
@@ -224,7 +240,9 @@ export default function DashProfile() {
         <span onClick={() => setShowModel(true)} className="cursor-pointer">
           Delete Acount
         </span>
-        <span className="cursor-pointer">Sign Out</span>
+        <span onClick={handelSignout} className="cursor-pointer">
+          Sign Out
+        </span>
       </div>
       {upadateUserSuccess && (
         <Alert color="success" className="mt-5">
